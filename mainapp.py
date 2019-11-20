@@ -40,6 +40,11 @@ class HelpMode(Mode):
 
 class ProgramMode(Mode):
 
+    def connect(mode, block, currentList):
+        currentList = copy.copy(currentList)
+        currentList.append(block)
+        return currentList
+
     def appStarted(mode):
         #this is where the list of "commands" will go
         mode.programComponents =  []
@@ -47,13 +52,12 @@ class ProgramMode(Mode):
 
     def keyPressed(mode, event):
         if event.key == 'l':
-            mode.blocks.append(\
-                NeopixelBlock(mode.width/2, mode.height/2))
+            mode.blocks = mode.connect(NeopixelBlock(mode.width/2, mode.height/2),\
+                 mode.blocks)
 
         elif event.key == 's':
-
-            mode.blocks.append(\
-                SpeakerBlock( mode.width/2, mode.height/2))
+            mode.blocks =  mode.connect(SpeakerBlock(mode.width/2, mode.height/2), \
+                mode.blocks)
 
         elif event.key == 'h':
             print('\nh')
@@ -61,12 +65,17 @@ class ProgramMode(Mode):
 
         elif event.key == 'd':
             print('\nddd')
-            mode.blocks.append(\
-                DelayBlock( mode.width/2, mode.height/2))
+            mode.blocks = mode.connect(
+                DelayBlock( mode.width/2, mode.height/2), mode.blocks)
 
         elif event.key == 'r':
             #removes the last item
             mode.blocks.pop()
+    
+        elif  event.key == 'i':
+            mode.blocks =  mode.connect(IfButtonBlock(mode.width/2,\
+                mode.height/2, NeopixelBlock(mode.width/2, mode.height/2)),\
+                      mode.blocks)
         
         elif event.key == 'c':
             #change the color
