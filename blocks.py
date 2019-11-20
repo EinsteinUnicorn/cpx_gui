@@ -10,7 +10,6 @@ class StartBlock(object):
 import board 
 import neopixel
 from adafruit_circuitplayground.express import cpx
-led = neopixel.NeoPixel(board.NEOPIXEL, 1)
 while True:
 """
     def toString(self):
@@ -20,8 +19,7 @@ while True:
         pass
 
 class NeopixelBlock(object):
-    def __init__(self, isConnected, x, y):
-        self.isConnected = isConnected
+    def __init__(self, x, y):
         self.x, self.y = x, y
         self.colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]
         #these correspond with an index of the colors list
@@ -37,13 +35,19 @@ class NeopixelBlock(object):
         s = ""
         ledColors = self.getLedColors()
         for i in range(10):
-            s+= f'\n\tled[{i}]= {ledColors[i]}'
+            s+= f'\n\tcpx.pixels[{i}]= {ledColors[i]}'
         return s
 
     #use getLed as the LED arguement
     def changeColor(self, led):
         self.ledColors[led] += 1
         self.ledColors[led] %= 3
+
+    #def isTouchingBlock(self, L):
+    #    M = copy.copy(L)
+    #    if L[-1].touches(x, y):
+    #      M.append(self.toString())
+            
     
     #takes mouse coordinates and returns which led the mouse 
     #is hovering over
@@ -55,7 +59,7 @@ class NeopixelBlock(object):
         pass
 
 class SpeakerBlock(object):
-    def __init__(self, isConnected, x, y):
+    def __init__(self, x, y):
         self.isConnected = isConnected
         self.x, self.y = x, y
         #these are the frequencies in c  major scale
@@ -77,7 +81,7 @@ class SpeakerBlock(object):
         pass
 
 class DelayBlock(object):
-    def __init__(self, isConnected, x, y):
+    def __init__(self, x, y):
         self.isConnected = isConnected
         self.x, self.y = x, y
 
