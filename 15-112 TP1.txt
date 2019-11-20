@@ -1,0 +1,23 @@
+* Project Name: Learn To Code! A Lite Circuit Playground Express GUI
+* Competitive Analysis:
+   * This is by no means a novel thought. I have used products like the one I will be making before. The product that most closely resembles what I am recreating is Microsoft’s Make Code. The features that this software posses are far more advanced than I think I could implement in a term project, however there is one thing that my term project will be able to do that this one doesn’t do. With my version, user will be able to see how thier coding blocks translate into actual python code. Make code exports as a uf2, which is firmware. The firmware is not readable, and users cannot see the connection between their coding blocks, and actual code.
+* Structural Plan
+   * I will group objects in files organized by similar functions. All of the modal app components will be in one file. 
+   * I will create separate objects for each coding block, and the compiler.
+* Algorithmic Plan:
+   * The hardest part will be *actually* ordering things correctly when the code compiles, because the order things are put into the active window may not necessarily be the order in which the code should be created.  I was thinking that I could create a dictionary that maps objects to numbers and keep track of how many objects there are by taking the  len of a list to which every block in the active window is appended. When an object is moved in the window, I will constantly check whether the item is touching another object, and if it is, ill add it to the dictionary. Then, when I compile I’ll just go through each item in the dictionary, and create a string representation for every item.
+   * Another really complex part will be  determining which block is actively being modified. 
+* Timeline Plan
+   * TP1:
+      * Create most of the models for the GUI
+   * TP2:
+      * Draw out all of the components (This weekend)
+      * Figure out how to compile and link together visually each block
+   * TP3:
+      * Finalize UI
+      * *time permitting* see if i can use more advanced structures
+* Version Control Plan
+   * I have been using github for version control in this problem. This also helps with creating backups.
+* Module List
+   * Circuit Python
+   * CMU Graphics (tkinter, PIL)

@@ -15,6 +15,9 @@ while True:
     def toString(self):
         return self.msg
     
+    def inBounds(self, x, y):
+        pass
+    
     def draw(self, canvas):
         pass
 
@@ -60,6 +63,9 @@ class NeopixelBlock(object):
     def getLed(self, x, y):
         #TODO figure out how to get cell bounds of each LED 
         return 1
+    
+    def inBounds(self, x, y):
+        pass
 
     def draw(self, canvas):
         pass
@@ -88,12 +94,18 @@ class SpeakerBlock(object):
         tabs *= self.numTabs + 1
         return f'\n{tabs}cpx.play_tone({self.currentFreq}, .5)'
 
+    def inBounds(self, x, y):
+        pass
+
     def draw(self, canvas):
         pass
 class IfButtonBlock(object):
     def __init__(self, x, y, block):
         self.x, self.y = x, y
         self.block = block
+    
+    def inBounds(self, x, y):
+        pass
     
     def toString(self):
         msg  = '\n\tif cpx.button_a:'
@@ -112,6 +124,9 @@ class DelayBlock(object):
 
     def addTab(self, numTabs):
         self.numTabs  = numTabs
+
+    def inBounds(self, x, y):
+        pass
 
     def toString(self):
         tabs = "\t" 
