@@ -18,14 +18,14 @@ class CircuitPlaygroundGUI(ModalApp):
 class SplashMode(Mode):
 
     def appStarted(mode):
-        pass
+        mode.screen = mode.loadImage('splash_mode_background.png')
 
     def keyPressed(mode, event):
         mode.app.setActiveMode(mode.app.program)
 
     def redrawAll(mode, canvas):
-        #TODO this is where the splash screen graphic will go
-        pass 
+        canvas.create_image(mode.width/2, mode.height/2, image = \
+            ImageTk.PhotoImage(mode.screen))
 
 class HelpMode(Mode):
 
@@ -37,7 +37,6 @@ class HelpMode(Mode):
         mode.app.setActiveMode(mode.app.program)
 
     def redrawAll(mode, canvas):
-        #TODO put the help screen graphic here
         pass
 
 class ProgramMode(Mode):
@@ -51,6 +50,8 @@ class ProgramMode(Mode):
         #this is where the list of "commands" will go
         mode.programComponents =  []
         mode.blocks = [StartBlock()]
+        mode.background  = mode.loadImage('active_mode_background.png')
+        mode.compileButton = CompileButton(mode)
 
     def keyPressed(mode, event):
         if event.key == 'l':
@@ -83,14 +84,21 @@ class ProgramMode(Mode):
             #change the color
             mode.blocks[1].changeColor(random.randint(0,9))
 
-        
+    #def mouseMoved(self, event):
+        #print(f'mouseMoved at {(event.x, event.y)}')
+
     def mousePressed(mode, event):
         #this is where the code that will handle the 'compiling will go'
-        #if compilebutton.touches(event.x, event.y):
-        Compiler(mode.blocks).fileWrite()
+        print(f'x: {event.x}, y: {event.y}')
+        if mode.compileButton.touches(event.x, event.y):
+            mode.compileButton.compileCode(mode.blocks)
+        
+    
     def redrawAll(mode, canvas ):
-        #draw the background
-        pass
+        canvas.create_image(mode.width/2, mode.height/2, image = \
+            ImageTk.PhotoImage(mode.background))
+        mode.compileButton.draw(canvas)
+        
 
 def runCircuitPlaygroundGUI():
     CircuitPlaygroundGUI(width = 1320, height = 800)
