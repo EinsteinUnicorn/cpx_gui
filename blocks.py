@@ -1,17 +1,24 @@
 from cmu_112_graphics import *
 from tkinter import *
 from PIL import Image 
+from mainapp import *
 import copy
 import random
+import math
 
 class StartBlock(object):
-    def __init__(self):
+    def __init__(self, mode):
+        self.mode =  mode
+        self.x =  100
+        self.y = 200
+        self.image = self.mode.loadImage('start_block.png')
         self.msg = """import time
 import board 
 import neopixel
 from adafruit_circuitplayground.express import cpx
 while True:
 """
+
     def toString(self):
         return self.msg
     
@@ -19,15 +26,23 @@ while True:
         pass
     
     def draw(self, canvas):
-        pass
+        canvas.create_image(self.x, self.y, image=ImageTk.PhotoImage(self.image))
 
 class NeopixelBlock(object):
-    def __init__(self, x, y):
+    def __init__(self, x, y, mode):
+        self.mode = mode
         self.x, self.y = x, y
         self.numTabs = 0
         self.colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]
         #these correspond with an index of the colors list
         self.ledColors = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+        #these are images to be drawn
+        self.block = self.mode.loadImage('led_block.png')
+        self.base = self.mode.loadImage('cpx base.png')
+        self.ledImages = [self.mode.loadImage('red_led.png'),\
+            self.mode.loadImage('green_led.png'), \
+               self.mode.loadImage('blue_led.png')]
     
     def getLedColors(self):
         result = []
@@ -51,27 +66,63 @@ class NeopixelBlock(object):
     def changeColor(self, led):
         self.ledColors[led] += 1
         self.ledColors[led] %= 3
-
-    #def isTouchingBlock(self, L):
-    #    M = copy.copy(L)
-    #    if L[-1].touches(x, y):
-    #      M.append(self.toString())
-            
     
+    #returns  the distance between two points
+    def getDistance(self, x0, y0, x1, y1):
+        return math.sqrt((x0-x1)**2 + (y0-y1)**2)
+
     #takes mouse coordinates and returns which led the mouse 
     #is hovering over
     def getLed(self, x, y):
-        #TODO figure out how to get cell bounds of each LED 
-        return 1
-    
+        #the radius of each LED is 10
+        for led in range(len(self.getLedCoordinates())):
+            ledx, ledy = self.getLedCoordinates()[led]
+            if self.getDistance(ledx, ledy, x, y) <= 10:
+                return led
+
+    #determines whether coordinates are over an led or not
+    def inLed (self, x, y):
+        for led in range(len(self.getLedCoordinates())):
+            ledx, ledy = self.getLedCoordinates()[led]
+            if self.getDistance(ledx, ledy, x, y) <= 10:
+                return True
+        return False
+        
+    #determines whether the coordinates are inside the block or not
     def inBounds(self, x, y):
-        pass
+        if x >= self.x - 100 and x <= self.x + 100 and \
+            y >= self.y - 100 and y  <= self.y + 100 and \
+                self.inLed(x, y) == False:
+                    return True
+        return False
+
+    def getLedCoordinates(self):
+        ledCoordinates = []
+        for led in range(10):
+            ledAngle =  math.pi/2 - (2*math.pi)*(led/10)
+            ledX = self.x + 60 * math.cos(ledAngle)
+            ledY = self.y - 60 * math.sin(ledAngle)
+            ledCoordinates.append((ledX, ledY))
+        return ledCoordinates
 
     def draw(self, canvas):
-        pass
+        
+        canvas.create_image(self.x, self.y, image=ImageTk.PhotoImage(self.block))
+        canvas.create_image(self.x, self.y, image=ImageTk.PhotoImage(self.base))
+
+        #draws the leds circularly
+        for led in range(10):
+            ledX, ledY = self.getLedCoordinates()[led]
+            
+            self.ledImage = self.ledImages[self.ledColors[led]]
+            canvas.create_image(ledX, ledY,\
+                image=ImageTk.PhotoImage(self.ledImage))
+
+
 
 class SpeakerBlock(object):
-    def __init__(self, x, y):
+    def __init__(self, x, y, mode):
+        self.mode = mode
         self.x, self.y = x, y
         self.numTabs = 0
         #these are the frequencies in c  major scale
@@ -80,6 +131,15 @@ class SpeakerBlock(object):
             393.0, 436.7, 491.2, 524]
         self.currentToneIndex = 0
         self.currentFreq = self.frequencies[self.currentToneIndex]
+        self.base = self.mode.loadImage('speaker_block.png')
+        self.freqImages = [self.mode.loadImage('speaker_block_C.png'), \
+            self.mode.loadImage('speaker_block_D.png'),\
+                self.mode.loadImage('speaker_block_E.png'), \
+                    self.mode.loadImage('speaker_block_F.png'), 
+                        self.mode.loadImage('speaker_block_G.png'), \
+                            self.mode.loadImage('speaker_block_A.png'),\
+                                self.mode.loadImage('speaker_block_B.png'),
+                                    self.mode.loadImage('speaker_block_C.png')]
 
     def addTab(self, numTabs):
         self.numTabs  = numTabs
@@ -98,7 +158,10 @@ class SpeakerBlock(object):
         pass
 
     def draw(self, canvas):
-        pass
+        canvas.create_image(self.x, self.y, image=ImageTk.PhotoImage(self.base))
+        canvas.create_image(self.x, self.y, \
+            image=ImageTk.PhotoImage(self.freqImages[self.currentToneIndex]))
+        
 class IfButtonBlock(object):
     def __init__(self, x, y, block):
         self.x, self.y = x, y

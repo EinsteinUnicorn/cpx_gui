@@ -49,17 +49,17 @@ class ProgramMode(Mode):
     def appStarted(mode):
         #this is where the list of "commands" will go
         mode.programComponents =  []
-        mode.blocks = [StartBlock()]
+        mode.blocks = [StartBlock(mode)]
         mode.background  = mode.loadImage('active_mode_background.png')
         mode.compileButton = CompileButton(mode)
 
     def keyPressed(mode, event):
         if event.key == 'l':
-            mode.blocks = mode.connect(NeopixelBlock(mode.width/2, mode.height/2),\
+            mode.blocks = mode.connect(NeopixelBlock(mode.width/2, mode.height/2, mode),\
                  mode.blocks)
 
         elif event.key == 's':
-            mode.blocks =  mode.connect(SpeakerBlock(mode.width/2, mode.height/2), \
+            mode.blocks =  mode.connect(SpeakerBlock(mode.width/2, mode.height/2, mode), \
                 mode.blocks)
 
         elif event.key == 'h':
@@ -92,12 +92,26 @@ class ProgramMode(Mode):
         print(f'x: {event.x}, y: {event.y}')
         if mode.compileButton.touches(event.x, event.y):
             mode.compileButton.compileCode(mode.blocks)
+
+        for item in mode.blocks:
+            if isinstance(item, NeopixelBlock):
+                if item.inLed(event.x, event.y):
+                    item.changeColor(item.getLed(event.x, event.y))
         
-    
+    def mouseDragged(mode, event):
+        for item in mode.blocks:
+            if isinstance(item, NeopixelBlock):
+                if item.inBounds(event.x, event.y):
+                    item.x = event.x
+                    item.y = event.y
+
     def redrawAll(mode, canvas ):
         canvas.create_image(mode.width/2, mode.height/2, image = \
             ImageTk.PhotoImage(mode.background))
         mode.compileButton.draw(canvas)
+
+        for item  in mode.blocks:
+            item.draw(canvas)
         
 
 def runCircuitPlaygroundGUI():
