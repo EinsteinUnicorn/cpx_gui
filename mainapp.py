@@ -69,7 +69,7 @@ class ProgramMode(Mode):
         elif event.key == 'd':
             print('\nddd')
             mode.blocks = mode.connect(
-                DelayBlock( mode.width/2, mode.height/2), mode.blocks)
+                DelayBlock( mode.width/2, mode.height/2, mode), mode.blocks)
 
         elif event.key == 'r':
             #removes the last item
@@ -97,13 +97,19 @@ class ProgramMode(Mode):
             if isinstance(item, NeopixelBlock):
                 if item.inLed(event.x, event.y):
                     item.changeColor(item.getLed(event.x, event.y))
+            if isinstance(item, SpeakerBlock):
+                if item.inNote(event.x, event.y):
+                    item.changeTone()
         
     def mouseDragged(mode, event):
         for item in mode.blocks:
-            if isinstance(item, NeopixelBlock):
-                if item.inBounds(event.x, event.y):
-                    item.x = event.x
-                    item.y = event.y
+            if item.inBounds(event.x, event.y):
+                item.x = event.x
+                item.y = event.y
+            #if isinstance(item, DelayBlock):
+            #    if item.inBounds(event.x, event.y):
+            #        item.x = event.x 
+            #        item.y = event.y
 
     def redrawAll(mode, canvas ):
         canvas.create_image(mode.width/2, mode.height/2, image = \

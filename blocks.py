@@ -23,7 +23,10 @@ while True:
         return self.msg
     
     def inBounds(self, x, y):
-        pass
+        if x >= self.x - 100 and x <= self.x + 100 and \
+            y >= self.y - 50 and y  <= self.y + 50:
+                return True
+        return False
     
     def draw(self, canvas):
         canvas.create_image(self.x, self.y, image=ImageTk.PhotoImage(self.image))
@@ -146,8 +149,19 @@ class SpeakerBlock(object):
 
     def changeTone(self):
         self.currentToneIndex +=  1
-        self.currentToneIndex %= 9
+        self.currentToneIndex %= 8
         self.currentFreq = self.frequencies[self.currentToneIndex]
+
+    #returns  the distance between two points
+    def getDistance(self, x0, y0, x1, y1):
+        return math.sqrt((x0-x1)**2 + (y0-y1)**2)
+    
+    #checks if coordinates are inside of the note block
+    def inNote(self, x, y):
+        if x >= self.x - 40 and x <= self.x + 40:
+            if y >= self.y - 10 and y <= self.y + 50:
+                return True
+        return False
 
     def toString(self):
         tabs = "\t" 
@@ -155,7 +169,11 @@ class SpeakerBlock(object):
         return f'\n{tabs}cpx.play_tone({self.currentFreq}, .5)'
 
     def inBounds(self, x, y):
-        pass
+        if x >= self.x - 100 and x <= self.x + 100 and \
+            y >= self.y - 100 and y  <= self.y + 100 and\
+                self.inNote(x, y)  == False:
+                return True
+        return False
 
     def draw(self, canvas):
         canvas.create_image(self.x, self.y, image=ImageTk.PhotoImage(self.base))
@@ -179,17 +197,20 @@ class IfButtonBlock(object):
         return msg
 
 class DelayBlock(object):
-    def __init__(self, x, y):
-        #self.numTabs = numTabs
-        #self.isConnected = isConnected
+    def __init__(self, x, y, mode):
+        self.mode = mode
         self.x, self.y = x, y
         self.numTabs = 0
+        self.image = self.mode.loadImage('delay_block.png')
 
     def addTab(self, numTabs):
         self.numTabs  = numTabs
 
     def inBounds(self, x, y):
-        pass
+        if x >= self.x - 100 and x <= self.x + 100 and \
+            y >= self.y - 100 and y  <= self.y + 100:
+                return True
+        return False
 
     def toString(self):
         tabs = "\t" 
@@ -197,4 +218,4 @@ class DelayBlock(object):
         return f'\n{tabs}time.sleep(0.5)'
     
     def draw(self, canvas):
-        pass
+        canvas.create_image(self.x, self.y, image=ImageTk.PhotoImage(self.image))
