@@ -4,8 +4,6 @@ from PIL import Image
 from blocks import *
 from compiler import * 
 import random
-#TODO: determine how to sequentially compile the blocks, regardless of the order
-#the blocks were put into the screen
 
 class CircuitPlaygroundGUI(ModalApp):
 

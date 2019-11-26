@@ -2,6 +2,7 @@ from cmu_112_graphics import *
 from tkinter import *
 from PIL import Image 
 #from mainapp import  *
+from blocks import *
 import copy
 
 class CompileButton(object):
@@ -10,14 +11,14 @@ class CompileButton(object):
         self.mode = mode
         self.x, self.y =  1230, 60
         self.image = self.mode.loadImage('compile_button.png')
-    
+
+    #if the coordinates are in the image
     def touches(self, x, y):
         if x >= 1260 and x <= 1274 and \
             y >= 10 and y <= 46:
             return  True
         return False
 
-        
     def compileCode(self, programList):
         Compiler(programList).fileWrite()
 
@@ -29,13 +30,17 @@ class Compiler(object):
         #program is a list of the STR representations of the objects
         self.programList = copy.copy(programList)
     
+
     def programListToString(self):
         if self.programList == []:
             return ""
         else:
             s = ""
-            for item in self.programList:
-                s += item.toString()
+            for item in range(len(self.programList)):
+                #if an item is a if button, it will add a tab to the next block
+                if isinstance(self.programList[item], IfButtonBlock):
+                    self.programList[item+1].addTab(1)
+                s += self.programList[item].toString()
             return s
 
     def fileWrite(self):

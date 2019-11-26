@@ -47,15 +47,18 @@ class NeopixelBlock(object):
             self.mode.loadImage('green_led.png'), \
                self.mode.loadImage('blue_led.png')]
     
+    #returns a list of RGB values that correspond to the color of each led
     def getLedColors(self):
         result = []
         for led in self.ledColors:
             result.append(self.colors[led])
         return result
 
+    #added to ensure that this works with if blocks
     def addTab(self, numTabs):
         self.numTabs  = numTabs
 
+    #for converting to python
     def toString(self):
         s = ""
         ledColors = self.getLedColors()
@@ -99,6 +102,7 @@ class NeopixelBlock(object):
                     return True
         return False
 
+    #used for drawing and changing the colors of LED
     def getLedCoordinates(self):
         ledCoordinates = []
         for led in range(10):
@@ -121,8 +125,6 @@ class NeopixelBlock(object):
             canvas.create_image(ledX, ledY,\
                 image=ImageTk.PhotoImage(self.ledImage))
 
-
-
 class SpeakerBlock(object):
     def __init__(self, x, y, mode):
         self.mode = mode
@@ -135,6 +137,8 @@ class SpeakerBlock(object):
         self.currentToneIndex = 0
         self.currentFreq = self.frequencies[self.currentToneIndex]
         self.base = self.mode.loadImage('speaker_block.png')
+
+        #a list the images that correspond with the frequencies
         self.freqImages = [self.mode.loadImage('speaker_block_C.png'), \
             self.mode.loadImage('speaker_block_D.png'),\
                 self.mode.loadImage('speaker_block_E.png'), \
@@ -143,7 +147,8 @@ class SpeakerBlock(object):
                             self.mode.loadImage('speaker_block_A.png'),\
                                 self.mode.loadImage('speaker_block_B.png'),
                                     self.mode.loadImage('speaker_block_C.png')]
-
+   
+    #added to ensure that this works with if blocks
     def addTab(self, numTabs):
         self.numTabs  = numTabs
 
@@ -199,12 +204,11 @@ class IfButtonBlock(object):
             y >= self.y  and y  <= self.y + 150:
                 return True
         return False
-
     
     def addBlock(self, block):
         if self.hasBlock != True:
             if self.inBlockBounds(block.x, block.y):
-                self.addBlockSelf(block)
+               self.addBlockSelf(block)
     
     def addBlockToSelf(self, block):
         self.block = block
