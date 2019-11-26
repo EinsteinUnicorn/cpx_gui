@@ -28,6 +28,12 @@ while True:
                 return True
         return False
     
+    def inRightConnector(self, x, y):
+        if x>= self.x + 102 and x  <= self.x +111 and\
+            y >= self.y - 50 and y <= self.y + 50:
+            return True
+        return False
+    
     def draw(self, canvas):
         canvas.create_image(self.x, self.y, image=ImageTk.PhotoImage(self.image))
 
@@ -46,7 +52,14 @@ class NeopixelBlock(object):
         self.ledImages = [self.mode.loadImage('red_led.png'),\
             self.mode.loadImage('green_led.png'), \
                self.mode.loadImage('blue_led.png')]
-    
+
+    #this is a test to see if adding the object to a set will prevent 
+    #adding  duplicates
+    #def __hash__(self):
+    #    return hash(random.randint(100))
+    #def __eq__(self, other):
+    #   return (isinstance(other, NeopixelBlock) and (self.ledColors == other.ledColors))
+
     def getLedColors(self):
         result = []
         for led in self.ledColors:
@@ -73,6 +86,15 @@ class NeopixelBlock(object):
     #returns  the distance between two points
     def getDistance(self, x0, y0, x1, y1):
         return math.sqrt((x0-x1)**2 + (y0-y1)**2)
+    
+    def getLeftPoint(self):
+        return(self.x - 100, self.y)
+        
+    def inRightConnector(self, x, y):
+        if x>= self.x + 102 and x  <= self.x +111 and\
+            y >= self.y - 50 and y <= self.y + 50:
+            return True
+        return False
 
     #takes mouse coordinates and returns which led the mouse 
     #is hovering over

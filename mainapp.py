@@ -4,8 +4,6 @@ from PIL import Image
 from blocks import *
 from compiler import * 
 import random
-#TODO: determine how to sequentially compile the blocks, regardless of the order
-#the blocks were put into the screen
 
 class CircuitPlaygroundGUI(ModalApp):
 
@@ -50,6 +48,7 @@ class ProgramMode(Mode):
         #this is where the list of "commands" will go
         mode.programComponents =  []
         mode.blocks = [StartBlock(mode)]
+        mode.activeBlocks = [StartBlock(mode)]
         mode.background  = mode.loadImage('active_mode_background.png')
         mode.compileButton = CompileButton(mode)
 
@@ -84,32 +83,46 @@ class ProgramMode(Mode):
             #change the color
             mode.blocks[1].changeColor(random.randint(0,9))
 
-    #def mouseMoved(self, event):
-        #print(f'mouseMoved at {(event.x, event.y)}')
-
     def mousePressed(mode, event):
         #this is where the code that will handle the 'compiling will go'
         print(f'x: {event.x}, y: {event.y}')
+        print(mode.blocks[0].x, mode.blocks[0].y)
         if mode.compileButton.touches(event.x, event.y):
-            mode.compileButton.compileCode(mode.blocks)
+            mode.compileButton.compileCode(mode.activeBlocks)
 
+        count = 0
         for item in mode.blocks:
             if isinstance(item, NeopixelBlock):
                 if item.inLed(event.x, event.y):
-                    item.changeColor(item.getLed(event.x, event.y))
+                    led = item.getLed(event.x, event.y)
+                    item.changeColor(led)
+                    if item  in mode.activeBlocks:
+                        mode.activeBlocks[count].changeColor(led)
+                    #print(f'{item} ledColors' + str(item.getLedColors))
             if isinstance(item, SpeakerBlock):
                 if item.inNote(event.x, event.y):
                     item.changeTone()
+            count += 1
         
     def mouseDragged(mode, event):
-        for item in mode.blocks:
-            if item.inBounds(event.x, event.y):
-                item.x = event.x
-                item.y = event.y
-            #if isinstance(item, DelayBlock):
-            #    if item.inBounds(event.x, event.y):
-            #        item.x = event.x 
-            #        item.y = event.y
+        for item in range(len(mode.blocks)):
+            if mode.blocks[item].inBounds(event.x, event.y):
+                mode.blocks[item].x = event.x
+                mode.blocks[item].y = event.y
+
+
+    def mouseReleased(mode, event):
+        #print('in mouse release')
+        if len(mode.activeBlocks) < len(mode.blocks):
+            for item in range(len(mode.blocks)):
+                if item ==  0:
+                    continue
+                else:
+                    leftX, leftY = mode.blocks[item].getLeftPoint()
+                    if mode.blocks[item-1].inRightConnector(leftX, leftY):
+                        #mode.activeBlocks = mode.activeBlocks + [mode.blocks[item]]
+                        mode.activeBlocks = mode.connect(mode.blocks[item], mode.activeBlocks)
+        return
 
     def redrawAll(mode, canvas ):
         canvas.create_image(mode.width/2, mode.height/2, image = \
