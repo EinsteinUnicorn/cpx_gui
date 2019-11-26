@@ -181,20 +181,54 @@ class SpeakerBlock(object):
             image=ImageTk.PhotoImage(self.freqImages[self.currentToneIndex]))
         
 class IfButtonBlock(object):
-    def __init__(self, x, y, block):
+    def __init__(self, x, y, mode):
+        self.mode = mode
         self.x, self.y = x, y
-        self.block = block
+        self.hasBlock = False
+        self.block = None
+        self.base = self.mode.loadImage('if_block.png')
     
     def inBounds(self, x, y):
-        pass
+        if x >= self.x - 100 and x <= self.x + 100 and \
+            y >= self.y - 150 and y  <= self.y + 150:
+                return True
+        return False
+
+    def inBlockBounds(self, x, y):
+        if x >= self.x - 50 and x <= self.x + 50 and \
+            y >= self.y  and y  <= self.y + 150:
+                return True
+        return False
+
+    
+    def addBlock(self, block):
+        if self.hasBlock != True:
+            if self.inBlockBounds(block.x, block.y):
+                self.addBlockSelf(block)
+    
+    def addBlockToSelf(self, block):
+        self.block = block
+        self.hasBlock
+
+    def move(self, x, y):
+        self.x = x
+        self.y = y 
+        if self.hasBlock == True:
+            self.block.x = x #+ some coefficient
+            self.block.y = y + 30#+ some coefficient
     
     def toString(self):
         msg  = '\n\tif cpx.button_a:'
-        self.block.addTab(1)
-        for i in range(0,  10):
-            self.block.changeColor(i)
-        msg += self.block.toString()
+        if self.hasBlock == True:
+            self.block.addTab(1)
+            msg += self.block.toString()
         return msg
+
+    def draw(self, canvas):
+        canvas.create_image(self.x, self.y, \
+            image=ImageTk.PhotoImage(self.base))
+        if self.hasBlock == True:
+            self.block.draw(canvas)
 
 class DelayBlock(object):
     def __init__(self, x, y, mode):

@@ -42,7 +42,8 @@ class Compiler(object):
         if self.programList ==  []:
             print("There's nothing to write")
         else:
-            file = open('/Volumes/CIRCUITPY/code.py', 'w')
+            #file = open('/Volumes/CIRCUITPY/code.py', 'w')
+            file = open('/Users/beckybutton/Desktop/term_project_112/code.py', 'w')
             try:
                 file.write(self.programListToString())
             finally:

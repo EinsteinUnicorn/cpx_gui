@@ -30,14 +30,14 @@ class SplashMode(Mode):
 class HelpMode(Mode):
 
     def appStarted(mode):
-        #TODO put help message here
-        pass
+        mode.screen = mode.loadImage('help_screen.png')
 
-    def keyPressed(mode):
+    def keyPressed(mode, event):
         mode.app.setActiveMode(mode.app.program)
 
     def redrawAll(mode, canvas):
-        pass
+        canvas.create_image(mode.width/2, mode.height/2, image = \
+            ImageTk.PhotoImage(mode.screen))
 
 class ProgramMode(Mode):
 
@@ -63,26 +63,21 @@ class ProgramMode(Mode):
                 mode.blocks)
 
         elif event.key == 'h':
-            print('\nh')
             mode.app.setActiveMode(mode.app.help)
 
         elif event.key == 'd':
-            print('\nddd')
             mode.blocks = mode.connect(
                 DelayBlock( mode.width/2, mode.height/2, mode), mode.blocks)
 
         elif event.key == 'r':
             #removes the last item
-            mode.blocks.pop()
+            if len(mode.blocks) > 1:
+                mode.blocks.pop()
     
         elif  event.key == 'i':
             mode.blocks =  mode.connect(IfButtonBlock(mode.width/2,\
-                mode.height/2, NeopixelBlock(mode.width/2, mode.height/2)),\
-                      mode.blocks)
+                mode.height/2, mode), mode.blocks)
         
-        elif event.key == 'c':
-            #change the color
-            mode.blocks[1].changeColor(random.randint(0,9))
 
     #def mouseMoved(self, event):
         #print(f'mouseMoved at {(event.x, event.y)}')
@@ -106,6 +101,7 @@ class ProgramMode(Mode):
             if item.inBounds(event.x, event.y):
                 item.x = event.x
                 item.y = event.y
+            
             #if isinstance(item, DelayBlock):
             #    if item.inBounds(event.x, event.y):
             #        item.x = event.x 
