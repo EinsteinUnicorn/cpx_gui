@@ -1,7 +1,8 @@
+#this file contains all of the code related to 
+#compiling the program to the Circuit Playground Express
 from cmu_112_graphics import *
 from tkinter import *
 from PIL import Image 
-#from mainapp import  *
 from blocks import *
 import copy
 

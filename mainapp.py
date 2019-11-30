@@ -1,3 +1,4 @@
+#this file contains all of the modal app related code 
 from cmu_112_graphics import *
 from tkinter import *
 from PIL import Image 

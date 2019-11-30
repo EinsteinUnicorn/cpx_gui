@@ -1,7 +1,7 @@
+#This file contains all of the programming block objects
 from cmu_112_graphics import *
 from tkinter import *
 from PIL import Image 
-from mainapp import *
 import copy
 import random
 import math
@@ -227,7 +227,6 @@ class IfButtonBlock(object):
         self.block.addTab(1)
         msg += self.block.toString()
         return msg
-    
 
     def draw(self, canvas):
         canvas.create_image(self.x, self.y, \
