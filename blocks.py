@@ -46,6 +46,7 @@ class NeopixelBlock(object):
         self.ledImages = [self.mode.loadImage('red_led.png'),\
             self.mode.loadImage('green_led.png'), \
                self.mode.loadImage('blue_led.png')]
+        self.msg = ""
     
     #returns a list of RGB values that correspond to the color of each led
     def getLedColors(self):
@@ -60,13 +61,12 @@ class NeopixelBlock(object):
 
     #for converting to python
     def toString(self):
-        s = ""
         ledColors = self.getLedColors()
         tabs = "\t" 
         tabs *= self.numTabs + 1
         for i in range(10):
-            s+= f'\n{tabs}cpx.pixels[{i}]= {ledColors[i]}'
-        return s
+            self.msg += f'\n{tabs}cpx.pixels[{i}]= {ledColors[i]}'
+        return self.msg
 
     #use getLed as the LED arguement
     def changeColor(self, led):
@@ -208,7 +208,8 @@ class IfButtonBlock(object):
     def addBlock(self, block):
         if self.hasBlock != True:
             if self.inBlockBounds(block.x, block.y):
-               self.addBlockSelf(block)
+                print('block added')
+                self.addBlockToSelf(block)
     
     def addBlockToSelf(self, block):
         self.block = block
@@ -222,11 +223,11 @@ class IfButtonBlock(object):
             self.block.y = y + 30#+ some coefficient
     
     def toString(self):
-        msg  = '\n\tif cpx.button_a:'
-        if self.hasBlock == True:
-            self.block.addTab(1)
-            msg += self.block.toString()
+        msg = '\n\tif cpx.button_a:'
+        self.block.addTab(1)
+        msg += self.block.toString()
         return msg
+    
 
     def draw(self, canvas):
         canvas.create_image(self.x, self.y, \

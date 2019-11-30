@@ -62,42 +62,12 @@ class ProgramMode(Mode):
         col = int(x / cellWidth)
         return (row, col)
     
-    def maxItemLength(mode, a):
-        maxLen = 0
-        rows = len(a)
-        cols = len(a[0])
-        for row in range(rows):
-            for col in range(cols):
-                maxLen = max(maxLen, len(str(a[row][col])))
-        return maxLen
-    
-    def print2dList(mode, a):
-        if (a == []):
-            # So we don't crash accessing a[0]
-            print([])
-            return
-        rows = len(a)
-        cols = len(a[0])
-        fieldWidth = mode.maxItemLength(a)
-        print("[ ", end="")
-        for row in range(rows):
-            if (row > 0): print("\n  ", end="")
-            print("[ ", end="")
-            for col in range(cols):
-                if (col > 0): print(", ", end="")
-            # The next 2 lines print a[row][col] with the given fieldWidth
-                formatSpec = "%" + str(fieldWidth) + "s"
-                print(formatSpec % str(a[row][col]), end="")
-            print(" ]", end="")
-        print("]")
-    
     def createBoard(mode):
         #the int 0 as a placeholder
         board = [([0] * mode.cols) for row in range(mode.rows)]
         for item in mode.blocks:
             row, col = mode.getCell(item.x, item.y)
             board[row][col] = item
-        #mode.print2dList(board)
         return board
 
     #creates the program list!
@@ -108,21 +78,15 @@ class ProgramMode(Mode):
         saveIterator  = 0
         for row in board:
             for col in row:
-                #if col != 0:
-                    #print(col)
-                    #print(type(col))
-                    #print(type(StartBlock(mode)))
                 if type(col) ==  type(StartBlock(mode)):
                     print('True')
                     saveIterator  = iterator
             iterator += 1
             prelimProgramList = board[saveIterator]
-        #print(prelimProgramList)
         programList = []
         for item in prelimProgramList:
             if item != 0:
                 programList.append(item)
-        #print(programList)
         return programList
 
     #returns a tuple of len 4 of the bounding x and y  coordinates
@@ -184,9 +148,17 @@ class ProgramMode(Mode):
             if isinstance(item, SpeakerBlock):
                 if item.inNote(event.x, event.y):
                     item.changeTone()
+
+    def mouseReleased(mode, event):
+        for item in mode.blocks:
+            if type(item) == type(IfButtonBlock(1,1,mode)):
+                for otherBlock in mode.blocks:
+                     if type(otherBlock) != type(IfButtonBlock(1,1,mode)):
+                         if item.inBounds(otherBlock.x, otherBlock.y):
+                             item.addBlock(otherBlock)
+                             mode.blocks.remove(otherBlock)
         
     def mouseDragged(mode, event):
-        
         for item in mode.blocks:
             if item.inBounds(event.x, event.y):
                     row, col = mode.getCell(event.x, event.y)
