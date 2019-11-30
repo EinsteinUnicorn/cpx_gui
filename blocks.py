@@ -234,6 +234,32 @@ class IfButtonBlock(object):
         if self.hasBlock == True:
             self.block.draw(canvas)
 
+class  ForBlock(object):
+    def __init__(self, x, y, mode):
+        self.mode = mode
+        self.x, self.y = x, y
+        #an array of the amount of possible times to loops
+        self.loops = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        #the index
+        self.loopIndex = 0
+        #the value at the index
+        self.loopTimes = 1
+    
+    def toString(self):
+        msg  = f'\n\tfor i in range({self.loopTimes})'
+        if self.hasBlock == True:
+            self.block.addTab(1)
+            msg += self.block.toString()
+        return msg
+    
+    def increaseLoops(self):
+        self.loopIndex += 1
+        self.loopIndex % 8
+        self.loopTimes = self.loops[self.loopIndex]
+
+    def draw(self, canvas):
+        pass
+
 class DelayBlock(object):
     def __init__(self, x, y, mode):
         self.mode = mode
