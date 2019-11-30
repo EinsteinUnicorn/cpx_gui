@@ -38,8 +38,8 @@ class Compiler(object):
             s = ""
             for item in range(len(self.programList)):
                 #if an item is a if button, it will add a tab to the next block
-                if isinstance(self.programList[item], IfButtonBlock):
-                    self.programList[item+1].addTab(1)
+                #if isinstance(self.programList[item], IfButtonBlock):
+                #    self.programList[item+1].addTab(1)
                 s += self.programList[item].toString()
             return s
 

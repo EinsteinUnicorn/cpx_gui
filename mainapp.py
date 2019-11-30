@@ -108,12 +108,16 @@ class ProgramMode(Mode):
         saveIterator  = 0
         for row in board:
             for col in row:
-                if type(col) ==  StartBlock(mode):
+                #if col != 0:
+                    #print(col)
+                    #print(type(col))
+                    #print(type(StartBlock(mode)))
+                if type(col) ==  type(StartBlock(mode)):
                     print('True')
                     saveIterator  = iterator
             iterator += 1
             prelimProgramList = board[saveIterator]
-        print(prelimProgramList)
+        #print(prelimProgramList)
         programList = []
         for item in prelimProgramList:
             if item != 0:
