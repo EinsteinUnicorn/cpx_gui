@@ -134,7 +134,6 @@ class ProgramMode(Mode):
         elif  event.key == 'i':
             mode.blocks =  mode.connect(IfButtonBlock(mode.width/2,\
                 mode.height/2, mode), mode.blocks)
-        #add the up down left right keys to shift the blocks
 
     def mousePressed(mode, event):
         #this is where the code that will handle the 'compiling will go'

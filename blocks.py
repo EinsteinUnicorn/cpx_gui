@@ -28,6 +28,11 @@ while True:
                 return True
         return False
 
+    #this moves the item by a certain amount
+    def reposition(self, x, y):
+        self.x += x
+        self.y +=y
+
     def move(self, x, y):
         self.x = x
         self.y = y 
@@ -105,7 +110,13 @@ class NeopixelBlock(object):
                 self.inLed(x, y) == False:
                     return True
         return False
+    
+    #this moves the item by a certain amount
+    def reposition(self, x, y):
+        self.x += x
+        self.y +=y
 
+    #move sets the position to a coordinate
     def move(self, x, y):
         self.x = x
         self.y = y 
@@ -164,7 +175,12 @@ class SpeakerBlock(object):
         self.currentToneIndex +=  1
         self.currentToneIndex %= 8
         self.currentFreq = self.frequencies[self.currentToneIndex]
-    
+
+    #this moves the item by a certain amount
+    def reposition(self, x, y):
+        self.x += x
+        self.y +=y
+
     def move(self, x, y):
         self.x = x
         self.y = y 
@@ -235,6 +251,14 @@ class IfButtonBlock(object):
     def addBlockToSelf(self, block):
         self.block = block
         self.hasBlock = True
+    
+    #this moves the item by a certain amount
+    def reposition(self, x, y):
+        self.x += x
+        self.y +=y
+        if self.hasBlock == True:
+            self.block.x += x #+ some coefficient
+            self.block.y += y # 30#+ some coefficient
 
     def move(self, x, y):
         self.x = x
@@ -296,6 +320,11 @@ class DelayBlock(object):
             y >= self.y - 100 and y  <= self.y + 100:
                 return True
         return False
+
+    #this moves the item by a certain amount
+    def reposition(self, x, y):
+        self.x += x
+        self.y +=y
     
     def move(self, x, y):
         self.x = x
