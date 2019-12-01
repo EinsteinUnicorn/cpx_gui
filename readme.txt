@@ -10,3 +10,5 @@ Which libraries you're using that need to be installed. If you can include the l
 A list of any shortcut commands that exist. Shortcut commands can be used to demonstrate specific features by skipping forward in a game or loading sample data. They're useful for when you're testing your code too!
 
 A competent programmer should be able to run your project after reading the readme file, so make sure to include all necessary files in your submission!
+
+Circuit Playground Express 

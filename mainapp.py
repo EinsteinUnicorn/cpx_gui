@@ -156,16 +156,15 @@ class ProgramMode(Mode):
                 for otherBlock in mode.blocks:
                      if type(otherBlock) != type(IfButtonBlock(1,1,mode)):
                          if item.inBounds(otherBlock.x, otherBlock.y):
-                             item.addBlock(otherBlock)
-                             mode.blocks.remove(otherBlock)
+                            item.addBlock(otherBlock)
+                            mode.blocks.remove(otherBlock)
         
     def mouseDragged(mode, event):
         for item in mode.blocks:
             if item.inBounds(event.x, event.y):
                     row, col = mode.getCell(event.x, event.y)
                     x, y = mode.getCellCenter(row,  col)
-                    item.x = x
-                    item.y = y
+                    item.move(x,y)
 
     def redrawAll(mode, canvas ):
         canvas.create_image(mode.width/2, mode.height/2, image = \

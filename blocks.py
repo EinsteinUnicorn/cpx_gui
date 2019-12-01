@@ -27,6 +27,10 @@ while True:
             y >= self.y - 50 and y  <= self.y + 50:
                 return True
         return False
+
+    def move(self, x, y):
+        self.x = x
+        self.y = y 
     
     def draw(self, canvas):
         canvas.create_image(self.x, self.y, image=ImageTk.PhotoImage(self.image))
@@ -102,6 +106,10 @@ class NeopixelBlock(object):
                     return True
         return False
 
+    def move(self, x, y):
+        self.x = x
+        self.y = y 
+
     #used for drawing and changing the colors of LED
     def getLedCoordinates(self):
         ledCoordinates = []
@@ -156,6 +164,10 @@ class SpeakerBlock(object):
         self.currentToneIndex +=  1
         self.currentToneIndex %= 8
         self.currentFreq = self.frequencies[self.currentToneIndex]
+    
+    def move(self, x, y):
+        self.x = x
+        self.y = y 
 
     #returns  the distance between two points
     def getDistance(self, x0, y0, x1, y1):
@@ -213,14 +225,14 @@ class IfButtonBlock(object):
     
     def addBlockToSelf(self, block):
         self.block = block
-        self.hasBlock
+        self.hasBlock = True
 
     def move(self, x, y):
         self.x = x
         self.y = y 
         if self.hasBlock == True:
             self.block.x = x #+ some coefficient
-            self.block.y = y + 30#+ some coefficient
+            self.block.y = y # 30#+ some coefficient
     
     def toString(self):
         msg = '\n\tif cpx.button_a:'
@@ -275,6 +287,10 @@ class DelayBlock(object):
             y >= self.y - 100 and y  <= self.y + 100:
                 return True
         return False
+    
+    def move(self, x, y):
+        self.x = x
+        self.y = y 
 
     def toString(self):
         tabs = "\t" 
