@@ -149,6 +149,8 @@ class ProgramMode(Mode):
             if isinstance(item, SpeakerBlock):
                 if item.inNote(event.x, event.y):
                     item.changeTone()
+            if isinstance(item, IfButtonBlock):
+                item.doBlockSpecificStuff(event.x, event.y)
 
     def mouseReleased(mode, event):
         for item in mode.blocks:

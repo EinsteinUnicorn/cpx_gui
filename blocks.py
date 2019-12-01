@@ -216,6 +216,15 @@ class IfButtonBlock(object):
             y >= self.y  and y  <= self.y + 150:
                 return True
         return False
+        
+    def doBlockSpecificStuff(self, x, y):
+        if isinstance(self.block, SpeakerBlock):
+            if self.block.inNote(x, y):
+                self.block.changeTone()
+        elif isinstance(self.block, NeopixelBlock):
+            if self.block.inLed(x, y):
+                self.block.changeColor(self.block.getLed(x, y))
+
     
     def addBlock(self, block):
         if self.hasBlock != True:
