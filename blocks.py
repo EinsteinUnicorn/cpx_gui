@@ -213,20 +213,41 @@ class SpeakerBlock(object):
         canvas.create_image(self.x, self.y, \
             image=ImageTk.PhotoImage(self.freqImages[self.currentToneIndex]))
         
-class IfButtonBlock(object):
+class IfBlock(object):
     def __init__(self, x, y, mode):
         self.mode = mode
         self.x, self.y = x, y
         self.hasBlock = False
         self.block = None
-        self.base = self.mode.loadImage('if_block.png')
+        #if statement strings
+        self.ifOptions = ['if cpx.button_a:','if cpx.button_b:', \
+            'if cpx.light > 100:', 'if cpx.switch:' , 'if cpx.touch_A1:']
+        #correspoding images 
+        self.ifBases = ['if_block_a.png', 'if_block_b.png','if_light.png', \
+            'if_slide_switch.png', 'if_touch.png']
+        self.currentIf = 0
+        self.currentImage = self.ifBases[self.currentIf]
+        self.base = self.mode.loadImage(self.currentImage)
+    
+    def changeIf(self):
+        self.currentIf += 1
+        self.currentIf %= 5
+        self.currentImage = self.ifBases[self.currentIf]
+        self.base = self.mode.loadImage(self.currentImage)
     
     def inBounds(self, x, y):
         if x >= self.x - 100 and x <= self.x + 100 and \
-            y >= self.y - 150 and y  <= self.y + 150:
-                return True
+            y >= self.y - 150 and y  <= self.y + 150 :
+                    return True
         return False
 
+    def inChangeColorBounds(self, x, y):
+        if x >= self.x - 100 and x <= self.x + 100 and \
+            y >= self.y - 150 and y  <= self.y + 150 and not \
+                self.inBlockBounds(x, y) :
+                    return True
+        return False
+        
     def inBlockBounds(self, x, y):
         if x >= self.x - 50 and x <= self.x + 50 and \
             y >= self.y  and y  <= self.y + 150:
@@ -240,7 +261,6 @@ class IfButtonBlock(object):
         elif isinstance(self.block, NeopixelBlock):
             if self.block.inLed(x, y):
                 self.block.changeColor(self.block.getLed(x, y))
-
     
     def addBlock(self, block):
         if self.hasBlock != True:
@@ -268,7 +288,7 @@ class IfButtonBlock(object):
             self.block.y = y # 30#+ some coefficient
     
     def toString(self):
-        msg = '\n\tif cpx.button_a:'
+        msg = f'\n\t{self.ifOptions[self.currentIf]}'
         self.block.addTab(1)
         msg += self.block.toString()
         return msg
@@ -334,6 +354,56 @@ class DelayBlock(object):
         tabs = "\t" 
         tabs *= self.numTabs + 1
         return f'\n{tabs}time.sleep(0.5)'
+    
+    def draw(self, canvas):
+        canvas.create_image(self.x, self.y, image=ImageTk.PhotoImage(self.image))
+
+class BrightnessBlock(object):
+    def __init__(self, x, y, mode):
+        self.mode = mode
+        self.x, self.y = x, y
+        self.numTabs = 0
+        self.brightOptions = [.1, .3, .5]
+        self.images = ['brightness_block_10.png', \
+            'brightness_block_30.png','brightness_block_50.png']
+        self.brightness = 0
+        self.currentImage = self.images[self.brightness]
+        self.image = self.mode.loadImage(self.currentImage)
+    
+    def changeBrightness(self):
+        self.brightness += 1
+        self.brightness %= 3
+        self.currentImage = self.images[self.brightness]
+        self.image = self.mode.loadImage(self.currentImage)
+
+    def addTab(self, numTabs):
+        self.numTabs  = numTabs
+
+    def inBounds(self, x, y):
+        if x >= self.x - 100 and x <= self.x + 100 and \
+            y >= self.y - 100 and y  <= self.y + 100:
+                return True
+        return False
+
+    def inNumberBounds(self, x, y):
+        if x >= self.x -40 and x <= self.x + 40  and \
+            y >= self.y -20 and y  <= self.y + 20:
+                return True
+        return False
+    #this moves the item by a certain amount
+    def reposition(self, x, y):
+        self.x += x
+        self.y +=y
+    
+    def move(self, x, y):
+        self.x = x
+        self.y = y 
+
+    def toString(self):
+        tabs = "\t" 
+        tabs *= self.numTabs + 1
+        brightness = self.brightOptions[self.brightness]
+        return f'\n{tabs}cpx.pixels.brightness = {brightness}'
     
     def draw(self, canvas):
         canvas.create_image(self.x, self.y, image=ImageTk.PhotoImage(self.image))

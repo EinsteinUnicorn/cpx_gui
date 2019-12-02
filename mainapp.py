@@ -127,12 +127,17 @@ class ProgramMode(Mode):
             #removes the last item
             if len(mode.blocks) > 1:
                 mode.blocks.pop()
+        
+        elif event.key == 'b':
+            mode.blocks = mode.connect(BrightnessBlock(mode.width/2, \
+                mode.height/2, mode), mode.blocks)
+
         elif event.key == 'f':
             #add the for block
             pass 
 
         elif  event.key == 'i':
-            mode.blocks =  mode.connect(IfButtonBlock(mode.width/2,\
+            mode.blocks =  mode.connect(IfBlock(mode.width/2,\
                 mode.height/2, mode), mode.blocks)
 
     def mousePressed(mode, event):
@@ -148,14 +153,19 @@ class ProgramMode(Mode):
             if isinstance(item, SpeakerBlock):
                 if item.inNote(event.x, event.y):
                     item.changeTone()
-            if isinstance(item, IfButtonBlock):
+            if isinstance(item, BrightnessBlock):
+                if item.inNumberBounds(event.x, event.y):
+                    item.changeBrightness()
+            if isinstance(item, IfBlock):
+                if item.inChangeColorBounds(event.x, event.y):
+                    item.changeIf()
                 item.doBlockSpecificStuff(event.x, event.y)
 
     def mouseReleased(mode, event):
         for item in mode.blocks:
-            if type(item) == type(IfButtonBlock(1,1,mode)):
+            if type(item) == type(IfBlock(1,1,mode)):
                 for otherBlock in mode.blocks:
-                     if type(otherBlock) != type(IfButtonBlock(1,1,mode)):
+                     if type(otherBlock) != type(IfBlock(1,1,mode)):
                          if item.inBounds(otherBlock.x, otherBlock.y):
                             item.addBlock(otherBlock)
                             mode.blocks.remove(otherBlock)
