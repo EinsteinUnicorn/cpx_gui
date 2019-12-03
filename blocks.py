@@ -9,8 +9,8 @@ import math
 class StartBlock(object):
     def __init__(self, mode):
         self.mode =  mode
-        self.x =  100
-        self.y = 200
+        self.x =  110
+        self.y = 233
         self.image = self.mode.loadImage('start_block.png')
         self.msg = """import time
 import board 
@@ -247,10 +247,10 @@ class IfBlock(object):
                 self.inBlockBounds(x, y) :
                     return True
         return False
-        
+
     def inBlockBounds(self, x, y):
-        if x >= self.x - 50 and x <= self.x + 50 and \
-            y >= self.y  and y  <= self.y + 150:
+        if x >= self.x - 100 and x <= self.x +100 and \
+            y >= self.y - 75  and y  <= self.y + 130:
                 return True
         return False
         
