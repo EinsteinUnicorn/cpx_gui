@@ -21,3 +21,13 @@
 * Module List
    * Circuit Python
    * CMU Graphics (tkinter, PIL)
+*TP2 Update:
+	*No major changes to design
+	*full codebase https://github.com/EinsteinUnicorn/term_project_112
+	*doesn't include images bc zip was too big
+*TP3 Update:
+	*Added new coding blocks, including for loops, and the ability to change the 
+		kind of condition being tested in the if block
+	*changed the way the code is compiled, such that it will only run if block is in 		same row as the start block
+	*fixed a major bug with if statements, and the way they're compiled
+	*fixed the help screen
