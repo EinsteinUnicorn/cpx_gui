@@ -303,27 +303,91 @@ class  ForBlock(object):
     def __init__(self, x, y, mode):
         self.mode = mode
         self.x, self.y = x, y
+        self.hasBlock = False
+        self.block = None
         #an array of the amount of possible times to loops
-        self.loops = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        self.forOptions = ['1', '2', '3']
+        #correspoding images 
+        self.forBases = ['repeat_1 .png', 'repeat_2.png','repeat_3.png']
         #the index
-        self.loopIndex = 0
-        #the value at the index
-        self.loopTimes = 1
+        self.currentFor = 0
+        self.currentImage = self.forBases[self.currentFor]
+        self.base = self.mode.loadImage(self.currentImage)
     
     def toString(self):
-        msg  = f'\n\tfor i in range({self.loopTimes})'
+        msg  = f'\n\tfor i in range({self.forOptions[self.currentFor]}):'
         if self.hasBlock == True:
             self.block.addTab(1)
             msg += self.block.toString()
+            if isinstance(self.block, NeopixelBlock):
+                msg += '\n\t\ttime.sleep(0.5)'
         return msg
     
     def increaseLoops(self):
-        self.loopIndex += 1
-        self.loopIndex % 8
-        self.loopTimes = self.loops[self.loopIndex]
+        self.currentFor += 1
+        self.currentFor %= 3
+        self.currentImage = self.forBases[self.currentFor]
+        self.base = self.mode.loadImage(self.currentImage)
+
+    
+    def inBounds(self, x, y):
+        if x >= self.x - 100 and x <= self.x + 100 and \
+            y >= self.y - 150 and y  <= self.y + 150 :
+                    return True
+        return False
+
+    def inChangeColorBounds(self, x, y):
+        if x >= self.x - 100 and x <= self.x + 100 and \
+            y >= self.y - 150 and y  <= self.y + 150 and not \
+                self.inBlockBounds(x, y) :
+                    return True
+        return False
+
+    def inBlockBounds(self, x, y):
+        if x >= self.x - 100 and x <= self.x +100 and \
+            y >= self.y - 75  and y  <= self.y + 130:
+                return True
+        return False
+        
+    def doBlockSpecificStuff(self, x, y):
+        if isinstance(self.block, SpeakerBlock):
+            if self.block.inNote(x, y):
+                self.block.changeTone()
+        elif isinstance(self.block, NeopixelBlock):
+            if self.block.inLed(x, y):
+                self.block.changeColor(self.block.getLed(x, y))
+    
+    def addBlock(self, block):
+        if self.hasBlock != True:
+            if self.inBlockBounds(block.x, block.y):
+                print('block added')
+                self.addBlockToSelf(block)
+    
+    def addBlockToSelf(self, block):
+        self.block = block
+        self.hasBlock = True
+    
+    #this moves the item by a certain amount
+    def reposition(self, x, y):
+        self.x += x
+        self.y +=y
+        if self.hasBlock == True:
+            self.block.x += x #+ some coefficient
+            self.block.y += y # 30#+ some coefficient
+
+    def move(self, x, y):
+        self.x = x
+        self.y = y 
+        if self.hasBlock == True:
+            self.block.x = x #+ some coefficient
+            self.block.y = y # 30#+ some coefficient
+    
 
     def draw(self, canvas):
-        pass
+        canvas.create_image(self.x, self.y, \
+            image=ImageTk.PhotoImage(self.base))
+        if self.hasBlock == True:
+            self.block.draw(canvas)
 
 class DelayBlock(object):
     def __init__(self, x, y, mode):

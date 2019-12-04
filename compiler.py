@@ -30,7 +30,6 @@ class Compiler(object):
     def __init__(self, programList):
         #program is a list of the STR representations of the objects
         self.programList = copy.copy(programList)
-    
 
     def programListToString(self):
         if self.programList == []:
@@ -38,9 +37,6 @@ class Compiler(object):
         else:
             s = ""
             for item in range(len(self.programList)):
-                #if an item is a if button, it will add a tab to the next block
-                #if isinstance(self.programList[item], IfButtonBlock):
-                #    self.programList[item+1].addTab(1)
                 s += self.programList[item].toString()
             return s
 

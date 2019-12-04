@@ -133,8 +133,8 @@ class ProgramMode(Mode):
                 mode.height/2, mode), mode.blocks)
 
         elif event.key == 'f':
-            #add the for block
-            pass 
+            mode.blocks = mode.connect(ForBlock(mode.width/2, \
+                mode.height/2, mode), mode.blocks)
 
         elif  event.key == 'i':
             mode.blocks =  mode.connect(IfBlock(mode.width/2,\
@@ -160,12 +160,22 @@ class ProgramMode(Mode):
                 if item.inChangeColorBounds(event.x, event.y):
                     item.changeIf()
                 item.doBlockSpecificStuff(event.x, event.y)
+            if isinstance(item, ForBlock):
+                if item.inChangeColorBounds(event.x, event.y):
+                    item.increaseLoops()
+                item.doBlockSpecificStuff(event.x, event.y)
 
     def mouseReleased(mode, event):
         for item in mode.blocks:
             if type(item) == type(IfBlock(1,1,mode)):
                 for otherBlock in mode.blocks:
                      if type(otherBlock) != type(IfBlock(1,1,mode)):
+                         if item.inBounds(otherBlock.x, otherBlock.y):
+                            item.addBlock(otherBlock)
+                            mode.blocks.remove(otherBlock)
+            if type(item) == type(ForBlock(1,1,mode)):
+                for otherBlock in mode.blocks:
+                     if type(otherBlock) != type(ForBlock(1,1,mode)):
                          if item.inBounds(otherBlock.x, otherBlock.y):
                             item.addBlock(otherBlock)
                             mode.blocks.remove(otherBlock)
