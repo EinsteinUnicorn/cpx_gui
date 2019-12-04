@@ -12,6 +12,7 @@ class CircuitPlaygroundGUI(ModalApp):
         app.splash =  SplashMode()
         app.program = ProgramMode()
         app.help =  HelpMode()
+        app.help2 = HelpMode2()
         app.setActiveMode(app.splash)
 
 class SplashMode(Mode):
@@ -30,6 +31,18 @@ class HelpMode(Mode):
 
     def appStarted(mode):
         mode.screen = mode.loadImage('help_screen.png')
+
+    def keyPressed(mode, event):
+        mode.app.setActiveMode(mode.app.help2)
+
+    def redrawAll(mode, canvas):
+        canvas.create_image(mode.width/2, mode.height/2, image = \
+            ImageTk.PhotoImage(mode.screen))
+
+class HelpMode2(Mode):
+
+    def appStarted(mode):
+        mode.screen = mode.loadImage('help_screen_2.png')
 
     def keyPressed(mode, event):
         mode.app.setActiveMode(mode.app.program)
