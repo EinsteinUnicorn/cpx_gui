@@ -265,7 +265,6 @@ class IfBlock(object):
     def addBlock(self, block):
         if self.hasBlock != True:
             if self.inBlockBounds(block.x, block.y):
-                print('block added')
                 self.addBlockToSelf(block)
     
     def addBlockToSelf(self, block):
@@ -360,7 +359,6 @@ class  ForBlock(object):
     def addBlock(self, block):
         if self.hasBlock != True:
             if self.inBlockBounds(block.x, block.y):
-                print('block added')
                 self.addBlockToSelf(block)
     
     def addBlockToSelf(self, block):

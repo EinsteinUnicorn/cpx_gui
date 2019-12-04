@@ -67,7 +67,8 @@ class ProgramMode(Mode):
         #blocks are 220 by 180
         mode.rows = mode.width // 110
         mode.cols = mode.height // 20
-    
+
+    #from https://www.cs.cmu.edu/~112/notes/notes-animations-part1.html
     #returns the row, col that the point is in.
     def getCell(mode, x, y):
         cellWidth  = mode.width / mode.cols
@@ -93,7 +94,6 @@ class ProgramMode(Mode):
         for row in board:
             for col in row:
                 if type(col) ==  type(StartBlock(mode)):
-                    print('True')
                     saveIterator  = iterator
             iterator += 1
             prelimProgramList = board[saveIterator]
@@ -102,7 +102,8 @@ class ProgramMode(Mode):
             if item != 0:
                 programList.append(item)
         return programList
-
+    
+    #from https://www.cs.cmu.edu/~112/notes/notes-animations-part1.html
     #returns a tuple of len 4 of the bounding x and y  coordinates
     def getCellBounds(mode, row, col):
         columnWidth = mode.width / mode.cols
@@ -154,8 +155,6 @@ class ProgramMode(Mode):
                 mode.height/2, mode), mode.blocks)
 
     def mousePressed(mode, event):
-        #this is where the code that will handle the 'compiling will go'
-        print(f'x: {event.x}, y: {event.y}')
         if mode.compileButton.touches(event.x, event.y):
             mode.compileButton.compileCode(mode.createProgram())
 
@@ -184,14 +183,15 @@ class ProgramMode(Mode):
                 for otherBlock in mode.blocks:
                      if type(otherBlock) != type(IfBlock(1,1,mode)):
                          if item.inBounds(otherBlock.x, otherBlock.y):
-                            item.addBlock(otherBlock)
                             mode.blocks.remove(otherBlock)
+                            item.addBlock(otherBlock)
             if type(item) == type(ForBlock(1,1,mode)):
                 for otherBlock in mode.blocks:
                      if type(otherBlock) != type(ForBlock(1,1,mode)):
                          if item.inBounds(otherBlock.x, otherBlock.y):
-                            item.addBlock(otherBlock)
                             mode.blocks.remove(otherBlock)
+                            item.addBlock(otherBlock)
+                            
         
     def mouseDragged(mode, event):
         for item in mode.blocks:
